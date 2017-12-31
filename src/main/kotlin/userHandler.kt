@@ -1,3 +1,4 @@
+import org.eclipse.jetty.websocket.jsr356.annotations.Param
 import org.http4k.core.*
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.NOT_FOUND
@@ -9,11 +10,16 @@ val userBody = Body.auto<UserDTO>().toLens()
 
 class UserHandler(private val userDAO: UserDAO) {
 
+    private val userIso = Iso<UserDTO, UserDB>(
+            { dto -> UserDB(dto.login, dto.role.name) },
+            { db -> UserDTO(db.login, Role.valueOf(db.role)) }
+    )
+
     fun get(login: String): HttpHandler = { _ ->
         val userDB = userDAO.get(login)
 
         if (userDB != null)
-            Response(OK).with(userBody of UserDTO(userDB.login, Role.valueOf(userDB.role)))
+            Response(OK).with(userBody of userIso.swap(userDB))
         else
             Response(NOT_FOUND).body("User $login not found")
     }
@@ -24,7 +30,7 @@ class UserHandler(private val userDAO: UserDAO) {
         when (login) {
             "root" -> Response(BAD_REQUEST).body("root user cannot be updated")
             userDTO.login -> {
-                userDAO.put(UserDB(login, userDTO.role.name))
+                userDAO.put(userIso(userDTO))
                 Response(NO_CONTENT)
             }
             else -> Response(BAD_REQUEST).body("wrong path")
