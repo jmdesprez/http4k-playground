@@ -1,3 +1,6 @@
+import org.http4k.core.HttpMessage
+import org.http4k.lens.BiDiBodyLens
+
 /**
  * An isomorphism between A and B
  */
@@ -15,8 +18,23 @@ class Lens<S, A>(val getter: (S) -> A, val setter: (A) -> (S) -> S) {
     fun mapGetter(op: A.() -> A): (S) -> A = { s -> op(getter(s)) }
     fun map(op: A.() -> A): (S) -> S = { s -> setter(op(getter(s)))(s) }
 
-    fun <T> lift(iso: Iso<T, S>): Lens<T, A> = Lens(
+    fun <B> chain(lens: Lens<A, B>): Lens<S, B> = Lens(
+            { s -> lens(getter(s)) },
+            { newValue -> { s -> setter(lens.setter(newValue)(getter(s)))(s) } }
+    )
+
+    fun <T> from(iso: Iso<T, S>): Lens<T, A> = Lens(
             { getter(iso(it)) },
             { a -> { t -> iso.swap(setter(a)(iso(t))) } }
     )
 }
+
+fun <T, V> BiDiBodyLens<T>.chain(lens: Lens<T, V>): Lens<HttpMessage, V> = Lens(
+        { httpMessage -> lens(extract(httpMessage)) },
+        { newValue -> { httpMessage -> this.of<HttpMessage>(lens.setter(newValue)(extract(httpMessage)))(httpMessage) } }
+)
+
+fun <T> BiDiBodyLens<T>.with(map: T.() -> T): BiDiBodyLens<T> = BiDiBodyLens(metas, contentType,
+        { httpMessage -> extract(httpMessage).map() },
+        { t, httpMessage -> inject(t.map(), httpMessage) }
+)
