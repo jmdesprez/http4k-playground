@@ -8,4 +8,6 @@ val userRoleLens = Lens(UserDTO::role, { newValue -> { user -> user.copy(role = 
 
 val userLoginLens = Lens(UserDTO::login, { newValue -> { user -> user.copy(login = newValue) } })
 
-val userUpperCaseLoginSetter = userLoginLens.mapSetter { toUpperCase() }
+val userUpperCaseLoginGetter: (UserDTO) -> String = userLoginLens.mapGetter { toUpperCase() }
+
+val mapToUpperCaseLogin: (UserDTO) -> UserDTO = userLoginLens.map { toUpperCase() }

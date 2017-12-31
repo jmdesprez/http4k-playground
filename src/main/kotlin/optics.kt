@@ -13,7 +13,7 @@ class Lens<S, A>(val getter: (S) -> A, val setter: (A) -> (S) -> S) {
     operator fun invoke(s: S): A = getter(s)
 
     fun mapGetter(op: A.() -> A): (S) -> A = { s -> op(getter(s)) }
-    fun mapSetter(op: A.() -> A): (S) -> S = { s -> setter(op(getter(s)))(s) }
+    fun map(op: A.() -> A): (S) -> S = { s -> setter(op(getter(s)))(s) }
 
     fun <T> lift(iso: Iso<T, S>): Lens<T, A> = Lens(
             { getter(iso(it)) },
