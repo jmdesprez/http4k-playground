@@ -1,3 +1,4 @@
+
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.bindContract
 import org.http4k.contract.div
@@ -9,8 +10,11 @@ interface RouteDefinition {
     val routes: Array<ContractRoute>
 }
 
+val loginPath = Path.of("login", "login of the user")
+
 class UserRoutes(userHandler: UserHandler): RouteDefinition {
-    private val userPath = "/users" / Path.of("login")
+
+    private val userPath = "/users" / loginPath
 
     private val getUser = userPath meta {
         summary = "get user"

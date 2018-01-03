@@ -1,13 +1,17 @@
+
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.with
 
-class UserClient(private val basePath: String) {
-    private val usersPath = "users"
+class UserClient(scheme: String = "http", host: String = "localhost", port: Int = 80) {
 
-    fun get(login: String) = Request(Method.GET, "$basePath/api/v1/$usersPath/$login")
-    fun put(userDTO: UserDTO, pathParam: String = userDTO.login) = Request(Method.PUT, "$basePath/api/v1/$usersPath/$pathParam").with(userBody of userDTO)
-    fun delete(login: String) = Request(Method.DELETE, "$basePath/api/v1/$usersPath/$login")
+    private val get = Request(Method.GET, "$scheme://$host:$port/api/v1/users/{login}")
+    private val put = get.method(Method.PUT)
+    private val delete = get.method(Method.DELETE)
+
+    fun get(login: String) = get.with(loginPath of login)
+    fun put(userDTO: UserDTO, pathParam: String = userDTO.login) = put.with(loginPath of pathParam, userBody of userDTO)
+    fun delete(login: String) = delete.with(loginPath of login)
 
     fun delete(userDTO: UserDTO) = delete(userDTO.login)
 }

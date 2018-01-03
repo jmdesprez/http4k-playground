@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
     //userPath.with({ it.query("login", "alice") })
 
     val alice = UserDTO("alice", Role.REGULAR)
-    val client = UserClient("")
+    val client = UserClient()
 
     fun get(login: String) {
         print("Get $login: ")
