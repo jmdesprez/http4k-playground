@@ -1,3 +1,5 @@
+package jm.desprez
+
 data class UserDB(val login: String, val role: String)
 
 interface UserDAO {

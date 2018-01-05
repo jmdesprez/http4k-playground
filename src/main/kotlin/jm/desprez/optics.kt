@@ -1,3 +1,5 @@
+package jm.desprez
+
 import org.http4k.core.HttpMessage
 import org.http4k.lens.BiDiBodyLens
 
@@ -35,6 +37,9 @@ fun <T, V> BiDiBodyLens<T>.chain(lens: Lens<T, V>): Lens<HttpMessage, V> = Lens(
 )
 
 fun <T> BiDiBodyLens<T>.with(map: T.() -> T): BiDiBodyLens<T> = BiDiBodyLens(metas, contentType,
-        { httpMessage -> extract(httpMessage).map() },
-        { t, httpMessage -> inject(t.map(), httpMessage) }
+                                                                             { httpMessage -> extract(httpMessage).map() },
+                                                                             { t, httpMessage ->
+                                                                                 inject(t.map(),
+                                                                                        httpMessage)
+                                                                             }
 )

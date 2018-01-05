@@ -1,3 +1,4 @@
+package jm.desprez
 
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.bindContract
@@ -12,7 +13,7 @@ interface RouteDefinition {
 
 val loginPath = Path.of("login", "login of the user")
 
-class UserRoutes(userHandler: UserHandler): RouteDefinition {
+class UserRoutes(userHandler: UserHandler) : RouteDefinition {
 
     private val userPath = "/users" / loginPath
 

@@ -1,21 +1,14 @@
-import org.http4k.contract.ApiInfo
-import org.http4k.contract.ApiKey
-import org.http4k.contract.OpenApi
-import org.http4k.contract.bind
-import org.http4k.contract.bindContract
-import org.http4k.contract.contract
-import org.http4k.contract.div
-import org.http4k.contract.meta
-import org.http4k.core.Body
+package jm.desprez
+
+import org.http4k.contract.*
+import org.http4k.core.*
 import org.http4k.core.ContentType.Companion.TEXT_PLAIN
-import org.http4k.core.HttpHandler
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.with
 import org.http4k.format.Jackson
-import org.http4k.lens.*
+import org.http4k.lens.Path
+import org.http4k.lens.Query
+import org.http4k.lens.int
+import org.http4k.lens.string
 import org.http4k.routing.routes
 
 //1. Define a route
@@ -62,16 +55,17 @@ fun main(args: Array<String>) {
     val api = Request(Method.GET, "http://127.0.0.1:8080/api/v2")
     println(handler(api))
 
-    val echo = Request(Method.GET, "http://127.0.0.1:8080/api/v1/echo/john?api=42&age=12").with(stringBody of "Hello world")
+    val echo = Request(Method.GET,
+                       "http://127.0.0.1:8080/api/v1/echo/john?api=42&age=12").with(stringBody of "Hello world")
     println(handler(echo))
 
-//    val server = handler.asServer(Jetty(8080))
-//    server.start()
-//
-//
-//    val client: HttpHandler = OkHttp()
-//
-//    println(client(api))
-//
-//    server.stop()
+    //    val server = handler.asServer(Jetty(8080))
+    //    server.start()
+    //
+    //
+    //    val client: HttpHandler = OkHttp()
+    //
+    //    println(client(api))
+    //
+    //    server.stop()
 }

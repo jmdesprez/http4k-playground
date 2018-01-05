@@ -1,4 +1,9 @@
-import com.github.salomonbrys.kodein.*
+package jm.desprez
+
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.instance
+import com.github.salomonbrys.kodein.singleton
 
 val kodein = Kodein {
     bind<UserDAO>() with singleton { HashMapDAO() }

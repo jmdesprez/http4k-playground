@@ -1,3 +1,5 @@
+package jm.desprez
+
 import com.github.salomonbrys.kodein.instance
 import org.http4k.contract.ApiInfo
 import org.http4k.contract.OpenApi
