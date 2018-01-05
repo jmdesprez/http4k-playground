@@ -8,6 +8,7 @@ import org.gradle.jvm.tasks.Jar
 
 buildscript {
     repositories {
+        mavenLocal()
         mavenCentral()
     }
     dependencies {
@@ -22,6 +23,13 @@ apply {
 plugins {
     application
     kotlin("jvm") version "1.2.0"
+}
+
+application {
+    group = "jm.desprez"
+    version = "1.0-SNAPSHOT"
+    applicationName = "HTTP-4K Demo"
+    mainClassName = "$group.UserServerKt"
 }
 
 configure<JUnitPlatformExtension> {
@@ -42,7 +50,6 @@ repositories {
     mavenCentral()
     jcenter()
 }
-
 
 dependencies {
 
@@ -68,14 +75,6 @@ dependencies {
     testCompile("com.natpryce:hamkrest:1.4.2.2")
 }
 
-application {
-    group = "jm.desprez"
-    version = "1.0-SNAPSHOT"
-    applicationName = "HTTP-4K Demo"
-    mainClassName = "$group.UserServerKt"
-}
-
-
 val fatJar = task("fatJar", type = Jar::class) {
     baseName = "${project.name}-fat"
     manifest {
@@ -96,7 +95,6 @@ tasks {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
-
 
 // extension for configuration
 fun JUnitPlatformExtension.filters(setup: FiltersExtension.() -> Unit) {
